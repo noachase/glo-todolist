@@ -5,6 +5,7 @@ const dateElement = document.getElementById('date')
 const list = document.getElementById('list')
 const doneList = document.getElementById('completed')
 const input = document.getElementById('input')
+const btn = document.querySelector('.fa-plus-circle')
 
 const CHECK = 'fa-check-circle'
 const UNCHECK = 'fa-circle-thin'
@@ -16,6 +17,8 @@ const today = new Date()
 let LIST, id
 
 let data = localStorage.getItem('TODO')
+
+input.focus()
 
 const addToDo = (toDo, id, done, trash) => {
 
@@ -41,7 +44,7 @@ const addToDo = (toDo, id, done, trash) => {
   }
 }
 
-const loadList = (array) => {
+const loadList = array => {
   array.forEach(function (item) {
     addToDo(item.name, item.id, item.done, item.trash)
   })
@@ -74,12 +77,12 @@ function removeToDo(element) {
   LIST[element.id].trash = true
 }
 
-clear.addEventListener('click', function () {
+clear.addEventListener('click', () => {
   localStorage.clear()
   location.reload()
 })
 
-document.addEventListener('keyup', function (e) {
+document.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
     const toDo = input.value
 
@@ -101,8 +104,8 @@ document.addEventListener('keyup', function (e) {
   }
 })
 
-list.addEventListener('click', function (event) {
-  const element = event.target
+list.addEventListener('click', e => {
+  const element = e.target
   const elementJob = element.attributes.job.value
 
   if (elementJob === 'complete') {
@@ -114,8 +117,8 @@ list.addEventListener('click', function (event) {
   localStorage.setItem('TODO', JSON.stringify(LIST))
 })
 
-doneList.addEventListener('click', function (event) {
-  const element = event.target
+doneList.addEventListener('click', e => {
+  const element = e.target
   const elementJob = element.attributes.job.value
   if (elementJob === 'complete') {
     completeToDo(element)
@@ -124,6 +127,28 @@ doneList.addEventListener('click', function (event) {
   }
 
   localStorage.setItem('TODO', JSON.stringify(LIST))
+})
+
+btn.addEventListener('click', e => {
+  if (e.target === btn) {
+    const toDo = input.value
+
+    if (toDo) {
+      addToDo(toDo, id, false, false)
+
+      LIST.push({
+        name: toDo,
+        id: id,
+        done: false,
+        trash: false
+      })
+
+      localStorage.setItem('TODO', JSON.stringify(LIST))
+
+      id++
+    }
+    input.value = ''
+  }
 })
 
 dateElement.innerHTML = today.toLocaleDateString('ru-RU', options)
